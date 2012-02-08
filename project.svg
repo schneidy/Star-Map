@@ -1,0 +1,154 @@
+<?xml version="1.0" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    version="1.1" baseProfile="full" onload="init()">
+<script type="text/javascript">
+<![CDATA[
+
+    var svgns="http://www.w3.org/2000/svg";
+    var xlinkns="http://www.w3.org/1999/xlink";
+
+    function init(){
+        //heading for the page
+        var heading = document.createElementNS(svgns, 'text');
+        heading.setAttributeNS(null, 'x', '550px');
+        heading.setAttributeNS(null, 'y', '100px');
+        heading.setAttributeNS(null, 'font-size', '55px');
+        heading.setAttributeNS(null, 'fill', 'white');
+        heading.setAttributeNS(null, 'id', 'heading');
+        heading.appendChild(document.createTextNode('Constellations'));
+        document.getElementById('textHolder').appendChild(heading);
+
+        //Instructions
+        var instruct = document.createElementNS(svgns, 'text');
+        instruct.setAttributeNS(null, 'x', '565px');
+        instruct.setAttributeNS(null, 'y', '130px');
+        instruct.setAttributeNS(null, 'font-size', '20px');
+        instruct.setAttributeNS(null, 'fill', 'white');
+        instruct.setAttributeNS(null, 'id', 'instruct');
+        instruct.appendChild(document.createTextNode('Click on the star to discover its name!'));
+        document.getElementById('textHolder').appendChild(instruct);
+
+    }
+
+    //Creates random time for the stars to appear
+    function starAppear(){
+        var time = (Math.random() * 4) + 's';
+        return time; 
+    }
+
+    //Changes the main heading to the current constellation hovered over
+    function constellationNameOn(which){
+        var name = which.getAttributeNS(null, 'name');
+        document.getElementById('heading').firstChild.nodeValue=name;
+    }
+
+    //Resets the main heading from the last constellation hovered over
+    function constellationNameOff(which){
+        document.getElementById('heading').firstChild.nodeValue="Constellations"; 
+    }
+
+    //Grabs the name of the star and displays it
+    //If the display is already on, then the display is removed
+    //Got it work at 11:51pm, now actually working on what I want to work on with the info. Will submit again after midnight.
+    function clickStar(which){
+
+        var name =  which.correspondingUseElement.getAttributeNS(null, 'name');
+
+        if(document.getElementById(name + 'Name') == null){
+            var xPos = which.correspondingUseElement.getAttributeNS(null, 'x');
+            var yPos = which.correspondingUseElement.getAttributeNS(null, 'y');
+            var wiki = which.correspondingUseElement.getAttributeNS(null, 'wiki');
+
+            var link = document.createElementNS(svgns, 'a');
+            link.setAttributeNS(null, 'target', '_blank');
+            link.setAttributeNS(xlinkns, 'xlink:href', wiki);
+
+
+            var starName = document.createElementNS(svgns, 'text');
+            starName.setAttributeNS(null, 'x', (parseFloat(xPos) + 10));
+            starName.setAttributeNS(null, 'y', yPos);
+            starName.setAttributeNS(null, 'font-size', '14px');
+            starName.setAttributeNS(null, 'fill', 'white');
+            starName.setAttributeNS(null, 'id', name+'Name');
+            starName.appendChild(document.createTextNode(name));
+
+            link.appendChild(starName);
+            document.getElementById('textHolder').appendChild(link);
+        }else{
+            //finds the element with the id of the star and removes it from its parent
+            document.getElementById(name+'Name').parentNode.removeChild(document.getElementById(name+'Name'));
+        }
+    }
+
+]]>
+</script>
+<defs>
+    <!-- This is the basic star  -->
+    <polygon id="star" class="star" 
+        points="350,75  379,161 469,161 397,215
+                423,301 350,250 277,301 303,215
+                231,161 321,161" transform="scale(.1, .1)" opacity="0"
+                onclick="clickStar(this)">
+        <animate xlink:href="#star" attributeName="opacity" from="0" to="1"
+        begin="2s" dur="5s" fill="freeze"/>
+    </polygon>
+</defs>
+
+<g id="background">
+    <!-- Styling with CSS -->
+    <style type="text/css"><![CDATA[
+        .star{
+            fill: yellow;
+            stroke: black;
+            stroke-width: 1px;
+        }
+
+        #sky{
+            fill: #FAD6A5;
+        }
+    ]]></style>
+
+    <rect id="sky" width="1200px" height="800px">
+    <!-- Sunset -->
+        <animateColor attributeName="fill" from="#FAD6A5" to="#673147"
+            begin="2s" dur="3s" fill="freeze"/>
+    </rect>
+    <path id="ground" d="M0,800 C175,700 325,600 1200,800" fill="green"/>
+</g>
+
+<g id="textHolder">
+</g>
+
+<g id="bigDipper" name="Big Dipper"
+    onmouseover="constellationNameOn(this)" onmouseout="constellationNameOff(this)">
+    <use xlink:href="#star" name="Alkaid" x="50" y="140" wiki="http://en.wikipedia.org/wiki/Eta_Ursae_Majoris"/>
+    <use xlink:href="#star" name="Alcor" x="110" y="100" wiki="http://en.wikipedia.org/wiki/Alcor_(star)"/>
+    <use xlink:href="#star" name="Alioth" x="160" y="120" wiki="http://en.wikipedia.org/wiki/Epsilon_Ursae_Majoris" />
+    <use xlink:href="#star" name="Megrez" x="210" y="150" wiki="http://en.wikipedia.org/wiki/Delta_Ursae_Majoris"/>
+    <use xlink:href="#star" name="Phecda" x="245" y="220" wiki="http://en.wikipedia.org/wiki/Gamma_Ursae_Majoris"/>
+    <use xlink:href="#star" name="Merak" x="365" y="195" wiki="http://en.wikipedia.org/wiki/Beta_Ursae_Majoris"/>
+    <use xlink:href="#star" name="Dubhe" x="335" y="115" wiki="http://en.wikipedia.org/wiki/Alpha_Ursae_Majoris"/>
+</g>
+
+<g id="orion" name="Orion"
+    onmouseover="constellationNameOn(this)" onmouseout="constellationNameOff(this)">
+    <use xlink:href="#star" name="Betelgeuse" x="650" y="270" wiki="http://en.wikipedia.org/wiki/Betelgeuse"/>
+    <use xlink:href="#star" name="Meissa" x="730" y="215" wiki="http://en.wikipedia.org/wiki/Lambda_Orionis"/>
+    <use xlink:href="#star" name="Bellatrix" x="785" y="290" wiki="http://en.wikipedia.org/wiki/Bellatrix"/>
+    <use xlink:href="#star" name="Mintaka" x="770" y="400" wiki="http://en.wikipedia.org/wiki/Delta_Orionis"/>
+    <use xlink:href="#star" name="Alnilarm" x="750" y="420" wiki="http://en.wikipedia.org/wiki/Epsilon_Orionis"/>
+    <use xlink:href="#star" name="Alnitak" x="730" y="440" wiki="http://en.wikipedia.org/wiki/Zeta_Orionis"/>
+    <use xlink:href="#star" name="Rigel" x="800" y="500" wiki="http://en.wikipedia.org/wiki/Rigel"/>
+    <use xlink:href="#star" name="Saiph" x="700" y="515" wiki="http://en.wikipedia.org/wiki/Kappa_Orionis"/>
+</g>
+
+<g id="aries" name="Aries"
+    onmouseover="constellationNameOn(this)" onmouseout="constellationNameOff(this)">
+    <use xlink:href="#star" name="41 Ari" x="160" y="440" wiki="http://en.wikipedia.org/wiki/41_Arietis"/>
+    <use xlink:href="#star" name="Hamal" x="370" y="490" wiki="http://en.wikipedia.org/wiki/Alpha_Arietis"/>
+    <use xlink:href="#star" name="Sheratan" x="440" y="530" wiki="http://en.wikipedia.org/wiki/Beta_Arietis"/>
+    <use xlink:href="#star" name="Mesarthim" x="470" y="560" wiki="http://en.wikipedia.org/wiki/Gamma_Arietis"/>
+</g>
+
+</svg>
